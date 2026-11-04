@@ -806,6 +806,28 @@ html.gc-on input:not([type=range]):not([type=checkbox]):not([type=radio]), html.
 html[data-theme="ivory"] .bg { background: radial-gradient(120% 80% at 50% -10%, var(--bg-top) 0%, var(--ink) 62%); }
 html[data-theme="ivory"] .au { opacity: 0.2; }
 
+
+/* ===== darker backgrounds for every theme ===== */
+.bg { background: radial-gradient(120% 85% at 50% -12%, color-mix(in srgb, var(--bg-top) 52%, #000) 0%, color-mix(in srgb, var(--ink) 55%, #000) 70%); }
+.b1 { opacity: calc(0.42 * var(--blob-op)); } .b2 { opacity: calc(0.28 * var(--blob-op)); } .b3 { opacity: calc(0.2 * var(--blob-op)); }
+.au.a1 { opacity: 0.2; } .au.a2 { opacity: 0.17; } .au.a3 { opacity: 0.14; }
+.scene { opacity: calc(var(--scene-op, 0.62) * 0.85); }
+html[data-theme="ivory"] .bg { background: radial-gradient(120% 80% at 50% -10%, var(--bg-top) 0%, var(--ink) 62%); }
+html[data-theme="ivory"] .b1, html[data-theme="ivory"] .b2, html[data-theme="ivory"] .b3 { opacity: calc(0.3 * var(--blob-op)); }
+.tabs { background: linear-gradient(var(--ink) 62%, transparent); }
+
+/* ===== phones and tablets: lighter rendering so nothing flickers ===== */
+html.lite body::after, html.lite .amb, html.lite .crystal, html.lite .aura, html.lite #dust, html.lite .guil { display: none !important; }
+html.lite .panel, html.lite .veil, html.lite .themepop, html.lite .toast, html.lite .ring-box, html.lite .tabs button, html.lite .btn, html.lite .seg { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html.lite .panel { background: var(--panel-bg), color-mix(in srgb, var(--ink) 72%, transparent); }
+html.lite .blob { animation: none !important; filter: blur(60px); }
+html.lite .scene, html.lite .scene * { animation: none !important; }
+html.lite .floor::before { animation: none !important; }
+html.lite .bg::after { transition: none; }
+html.lite .world { transition: none; will-change: auto; }
+html.lite .panel::after { display: none; }
+html.lite .ring, html.lite .sat { will-change: auto; }
+
 </style></head><body>
 <div id="splash" aria-hidden="true"><div class="sp-coin"><i>24K</i></div><div class="sp-word"><span style="--i:0">A</span><span style="--i:1">U</span><span style="--i:2">R</span><span style="--i:3">U</span><span style="--i:4">M</span><span style="--i:5"> </span><span style="--i:6">K</span><span style="--i:7">W</span></div></div>
 <div class="bg" aria-hidden="true"><canvas id="dust"></canvas><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><i class="floor"></i><div class="amb"><i class="au a1"></i><i class="au a2"></i><i class="au a3"></i><i class="bm m1"></i><i class="bm m2"></i><i class="ss s1"></i><i class="ss s2"></i><i class="ss s3"></i><i class="bkh" style="--x:4%;--s:20px;--d:27.3s;--dl:-7.9s;--dx:-34px"></i><i class="bkh" style="--x:10%;--s:12px;--d:25.5s;--dl:-1.9s;--dx:34px"></i><i class="bkh" style="--x:17%;--s:11px;--d:26.7s;--dl:-4.3s;--dx:-29px"></i><i class="bkh" style="--x:24%;--s:23px;--d:19.9s;--dl:-4.8s;--dx:30px"></i><i class="bkh" style="--x:30%;--s:23px;--d:14.8s;--dl:-11.3s;--dx:-12px"></i><i class="bkh" style="--x:37%;--s:30px;--d:22.8s;--dl:-19.0s;--dx:33px"></i><i class="bkh" style="--x:44%;--s:28px;--d:19.6s;--dl:-19.5s;--dx:-35px"></i><i class="bkh x" style="--x:50%;--s:27px;--d:26.0s;--dl:-5.8s;--dx:-22px"></i><i class="bkh x" style="--x:57%;--s:27px;--d:15.6s;--dl:-6.2s;--dx:47px"></i><i class="bkh x" style="--x:64%;--s:15px;--d:15.4s;--dl:-11.4s;--dx:-16px"></i><i class="bkh x" style="--x:71%;--s:21px;--d:15.4s;--dl:-14.2s;--dx:32px"></i><i class="bkh x" style="--x:77%;--s:11px;--d:22.7s;--dl:-9.9s;--dx:28px"></i><i class="bkh x" style="--x:84%;--s:23px;--d:24.9s;--dl:-9.3s;--dx:18px"></i><i class="bkh x" style="--x:91%;--s:21px;--d:18.2s;--dl:-15.9s;--dx:49px"></i></div><i class="aura" id="aura"></i><div class="scene"><div class="world" id="world"></div></div></div>
@@ -1830,7 +1852,9 @@ html[data-theme="ivory"] .au { opacity: 0.2; }
         '<span class="tp-sw" style="background:radial-gradient(circle at 78% 18%,' + t.sw[1] + " 0,transparent 55%),linear-gradient(140deg," + t.sw[2] + "," + t.sw[2] + ')"></span>' +
         '<span class="tp-n">' + t.name + '</span><span class="tp-s">' + t.sub + "</span></button>";
     }).join("");
-    var saved = load("aurum.theme"), fx = load("aurum.fx");
+    var saved = load("aurum.themeV") === "11" ? load("aurum.theme") : null, fx = load("aurum.fx");
+    store("aurum.themeV", "11");
+    if (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) document.documentElement.classList.add("lite");
     var lowEnd = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) || (navigator.deviceMemory && navigator.deviceMemory <= 2);
     applyFx(fx === null ? !(reduce || lowEnd) : fx === 1);
     applyTheme(saved || "aurum", false);
@@ -1861,12 +1885,35 @@ html[data-theme="ivory"] .au { opacity: 0.2; }
     function tilt(x, y) { if (!fxOn || reduce) return; px = Math.max(-1, Math.min(1, x)); py = Math.max(-1, Math.min(1, y)); if (!raf) raf = requestAnimationFrame(paint); }
     window.addEventListener("pointermove", function (e) { if (e.pointerType === "touch") return; tilt(e.clientX / window.innerWidth * 2 - 1, e.clientY / window.innerHeight * 2 - 1); }, { passive: true });
     document.addEventListener("mouseleave", function () { tilt(0, 0); });
-    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== "function") {
-      window.addEventListener("deviceorientation", function (e) {
-        if (e.gamma == null) return;
-        tilt(e.gamma / 28, ((e.beta || 45) - 45) / 28);
-      }, { passive: true });
+    /* phone: tilt follows your finger on the dial, and the phone's own tilt (gyro) */
+    var touching = false, hero = $("heroPanel"), ringBox = document.querySelector(".ring-box");
+    function touchTilt(e) {
+      var t = e.touches && e.touches[0]; if (!t || !ringBox) return;
+      touching = true; var r = ringBox.getBoundingClientRect();
+      tilt(((t.clientX - r.left) / r.width) * 2 - 1, ((t.clientY - r.top) / r.height) * 2 - 1);
     }
+    function touchEnd() { touching = false; tilt(0, 0); }
+    if (hero) {
+      hero.addEventListener("touchstart", function (e) { touchTilt(e); enableOri(); }, { passive: true });
+      hero.addEventListener("touchmove", touchTilt, { passive: true });
+      hero.addEventListener("touchend", touchEnd, { passive: true }); hero.addEventListener("touchcancel", touchEnd, { passive: true });
+    }
+    var g0 = null, b0 = 0, sg = 0, sb = 0, oriOn = false;
+    function onOri(e) {
+      if (e.gamma == null || touching) return;
+      var g = e.gamma, b = e.beta || 0;
+      if (g0 === null) { g0 = g; b0 = b; }
+      g0 += (g - g0) * 0.006; b0 += (b - b0) * 0.006;           /* neutral position slowly follows how you hold the phone */
+      sg += ((g - g0) - sg) * 0.22; sb += ((b - b0) - sb) * 0.22;
+      tilt(sg / 15, sb / 15);
+    }
+    function enableOri() {
+      if (oriOn || !window.DeviceOrientationEvent) return;
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        DeviceOrientationEvent.requestPermission().then(function (s) { if (s === "granted") { oriOn = true; window.addEventListener("deviceorientation", onOri, { passive: true }); } }).catch(function () {});
+      } else { oriOn = true; window.addEventListener("deviceorientation", onOri, { passive: true }); }
+    }
+    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== "function") enableOri();
   }
 
   /* ================= FEATURES v2 ================= */

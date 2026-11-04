@@ -1,5 +1,5 @@
 /* Aurum KW service worker: offline shell, fresh pages when online, notification taps. */
-const V = "aurum-v9";
+const V = "aurum-v10";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg"];
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(V).then((c) => c.addAll(SHELL)).catch(() => {}));
